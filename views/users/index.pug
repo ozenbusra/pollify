@@ -1,0 +1,18 @@
+extends ../layout
+
+block content
+  h1= title
+
+  ul
+    each user in userList
+      li
+        a(href=`/users/${user.id}`)  #{user.username}
+        |  Role: #{user.role}
+
+    else
+      li There are no users.
+
+  hr
+  if canCreateUser
+    p
+      a(href=`/users/create`) Create User
