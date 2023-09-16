@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1= title
+  li
+    a(href=`/users`)  User List
+  li
+    a(href=`/polls`)  Poll List
+
+  hr
+  form(method='POST' action='/logout')
+    button.btn.btn-primary(type='submit') Logout
