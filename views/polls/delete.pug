@@ -1,0 +1,17 @@
+extends ../layout
+
+block content
+  h1 Title: #{poll.title}
+
+  p #[strong Description:] #{poll.description}
+  p #[strong Status:] #{poll.status}
+  if poll.creator_id !== null
+    p #[strong Creator:]
+      a(href=`/users/${poll.creator_id}`)  #{poll.creator.username}
+
+  p Do you really want to delete this poll?
+
+  form(method='POST' action='')
+    div.form-group
+      input#pollId.form-control(type='hidden',name='pollId', required='true', value=poll.id )
+      button.btn.btn-primary(type='submit') Delete

@@ -1,0 +1,74 @@
+extends ../layout
+
+block content
+  h1 #{title}
+
+  form(method='POST' action='')
+    div.form-group
+      label(for='title') Title:
+      input#title.form-control(type='text', name='title' value=(poll === undefined ? '' : poll.title))
+
+      label(for='description') Description:
+      input#description.form-control(type='text', name='description' value=(poll === undefined ? '' : poll.description))
+      
+      if user.role === 'Admin'
+        label(for='status') Status:
+        select#status.form-control(type='select', name='status' required='true')
+          option(value='', selected='selected') Select Status
+          for status in ['Draft', 'Published', 'Closed']
+            if poll
+              option(value=status selected=(status === poll.status ? 'selected' : false) ) #{status}
+            else
+              option(value=status) #{status}
+      
+        label(for='creator') Creator:
+        select#creator_id.form-control(type='select', name='creator_id' required='true')
+          option(value='', selected='selected') Select Creator
+          for editor in editors
+            if poll
+              option(value=editor.id selected=(editor.id === poll.creator_id ? 'selected' : false) ) #{editor.username}
+            else
+              option(value=editor.id) #{editor.username}
+
+      hr
+      div#options-container
+        - if (poll && poll.options) 
+          each option, index in poll.options
+            div.form-group
+              label(for='options[]') Option:
+              input.form-control(type='text', name='options[]', value=option.option_text)
+              button.remove-option.btn.btn-danger(type='button') Remove Option
+
+        - else
+          div.form-group
+            label(for='options[]') Option:
+            input.form-control(type='text', name='options[]')
+
+      button#add-option.btn.btn-secondary(type='button') Add Option
+
+    hr
+    button.btn.btn-primary(type='submit') Submit
+
+  if errors
+   ul
+    for error in errors
+     li!= error.msg
+
+  script.
+    // JavaScript to add more option fields and remove option fields
+    document.addEventListener('click', function(event) {
+      if (event.target.id === 'add-option') {
+        const optionsContainer = document.getElementById('options-container');
+        const newOptionField = document.createElement('div');
+        newOptionField.classList.add('form-group');
+        newOptionField.innerHTML = `
+          <label for='options[]'>Option:</label>
+          <input class='form-control' type='text' name='options[]'>
+        `;
+        optionsContainer.appendChild(newOptionField);
+      } else if (event.target.classList.contains('remove-option')) {
+        // Remove the option field when the "Remove Option" button is clicked
+        const optionField = event.target.parentElement;
+        optionField.remove();
+      }
+    });    

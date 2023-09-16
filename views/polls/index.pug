@@ -1,0 +1,18 @@
+extends ../layout
+
+block content
+  h1= title
+
+  ul
+    each poll in pollList
+      li
+        a(href=`/polls/${poll.id}`)  #{poll.title}
+        |  Status: #{poll.status}
+
+    else
+      li There are no polls.
+
+  hr
+  if canCreatePoll
+    p
+      a(href=`/polls/create`) Create Pool

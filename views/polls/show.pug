@@ -1,0 +1,31 @@
+extends ../layout
+
+block content
+  h1 Title: #{poll.title}
+
+  p #[strong Description:] #{poll.description}
+  p #[strong Status:] #{poll.status}
+  if poll.creator_id !== null
+    p #[strong Creator:]
+      a(href=`/users/${poll.creator_id}`)  #{poll.creator.username}
+
+    h4 Options
+    ul
+    each option in poll.options
+      li
+        | #{option.option_text} - (Vote Count: #{option.votes.length})
+        if canCreateVote
+          form(action=`/polls/${poll.id}/vote/${option.id}`, method='POST')
+            button(type='submit') Vote
+
+    else
+      p This poll has no options.
+
+  hr
+  if canUpdatePoll
+    p
+      a(href=`/polls/${poll.id}/update`) Update Poll
+
+  if canDeletePoll
+    p
+      a(href=`/polls/${poll.id}/delete`) Delete Poll
